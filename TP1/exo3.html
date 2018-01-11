@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+ <title>Foo</title>
+</head>
+<body>
+  <h1>Title</h1>
+  <script type="text/javascript">
+    function test(fun, val) {
+      alert("fun = " + fun.name + "\nval = " + val + "\nres = " + fun(val))
+    }
+
+    function tarification(height) {
+      if (height < 2) return "lightweight"
+      if (height < 3) return "middleweight"
+      return "heavyweight"
+    }
+    test(tarification, 1)
+    test(tarification, 2)
+    test(tarification, 3)
+    test(tarification, 4)
+  </script>
+
+</body>
+</html>

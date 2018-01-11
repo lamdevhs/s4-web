@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+ <title>Foo</title>
+</head>
+<body>
+  <h1>Title</h1>
+  <script type="text/javascript">
+    function test(fun, val) {
+      alert("fun = " + fun.name + "\nval = " + val + "\nres = " + fun(val))
+    }
+
+    function log(v) { return console.log(v) }
+
+    function randN(max) { // rand in [0,max[
+      return Math.floor(Math.random()*max)
+    }
+
+    function randR(max, precision, included) {
+      included = included || false
+      var factor = 10*precision
+      if (included) {
+        return Math.floor(Math.random()*max*factor)/factor
+      }
+      else {
+        return Math.round(Math.random()*max*factor)/factor
+      }
+    }
+
+    function randList(max, size, precision) {
+      var out = []
+      for (var i = 0; i < size; i++)
+        out[i] = randR(max, precision)
+      return out
+    }
+
+    var marks = randList(20, 12, true)
+    log(marks)
+    function sum(marks) {
+      var out = 0
+      for (var i = 0; i < marks.length; i++) {
+        out += marks[i]
+      }
+      return out
+    }
+    function mean(marks) {
+      return sum(marks)/marks.length
+    }
+    function max(marks) {
+      var out = marks[0]
+      for (var i = 1; i < marks.length; i++) {
+        if (marks[i] > out) out = marks[i]
+      }
+      return out
+    }
+    function nbSupToMean(marks) {
+      var out = 0
+      var meanVal = mean(marks)
+      for (var i = 0; i < marks.length; i++) {
+        if (marks[i] >= meanVal) out += 1
+      }
+      return out
+    }
+    test(mean, marks)
+    test(max, marks)
+    test(nbSupToMean, marks)
+  </script>
+
+</body>
+</html>

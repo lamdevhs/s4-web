@@ -1,0 +1,18 @@
+body {
+	background-color: #eee;
+}
+
+h1 {
+	text-align: center;
+}
+
+.partie2 > p {
+	background-color: #555;
+	width: 80px;
+	height: 80px;
+	margin: 5px;
+}
+
+.partie2 > p > a {
+	color: #555;
+}

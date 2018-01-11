@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+ <title>Hello World!</title>
+</head>
+<body>
+  <h1>Title</h1>
+  <script type="text/javascript">
+    function test(fun, val) {
+      alert("fun = " + fun.name + "\nval = " + val + "\nres = " + fun(val))
+    }
+
+    function log(v) { return console.log(v) }
+
+    function randN(max) { // rand in [0,max[
+      return Math.floor(Math.random()*max)
+    }
+
+    function randR(max, precision, included) {
+      included = included || false
+      var factor = 10*precision
+      if (included) {
+        return Math.floor(Math.random()*max*factor)/factor
+      }
+      else {
+        return Math.round(Math.random()*max*factor)/factor
+      }
+    }
+
+    function nStars(n) {
+      if (n <= 0) return ""
+      return "*" + nStars(n - 1)
+    }
+    function starLine(n) {
+      document.write(nStars(n) + "<br>")
+    }
+    function triangle(height) {
+      for (var i = 1; i <= height; i ++) {
+        starLine(i)
+      }
+    }
+    document.write("Hiya world!<br>")
+    triangle(10)
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+ <title>Foo</title>
+</head>
+<body>
+  <h1>Title</h1>
+  <script type="text/javascript">
+    function test(fun, val) {
+      alert("fun = " + fun.name + "\nval = " + val + "\nres = " + fun(val))
+    }
+
+    function log(v) { return console.log(v) }
+
+    function randN(max) { // rand in [0,max[
+      return Math.floor(Math.random()*max)
+    }
+
+    function randR(max, precision) { // rand in [0,max[
+      var factor = 10*precision
+      return Math.round(Math.random()*max*factor)/factor
+    }
+
+    var colors = ["blue", "red", "purple", "yellow", "green"]
+    function randItem(list) {
+      var len = list.length
+      var ix = randN(len)
+      return [ix, list[ix]]
+    }
+    while (true) test(randItem, colors)
+  </script>
+
+</body>
+</html>
