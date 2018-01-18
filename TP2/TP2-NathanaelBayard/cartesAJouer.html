@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>jeu de cartes</title>
+	<style>
+	img { 
+		width: 60px;
+		height: auto;
+		padding: 2px 2px 2px 2px;
+		}
+	</style>
+</head>
+<body>
+<div id="cartes"></div>
+<script>
+
+
+var types = "carreau,coeur,treffle,pique".split(",");
+var values = ("01,02,03,04,05,06,07,"
+  + "08,09,10,11,12,13").split(",");
+
+
+
+function forLoop(max, lam){
+	for (var i = 0; i < max; i++){
+		lam(i);
+	}
+}
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function log(v) {
+  console.log(v);
+}
+
+
+function newEl(t) {
+  return document.createElement(t);
+}
+
+
+function randN(max) { // rand integer in [0,max[
+  return Math.floor(Math.random()*max);
+}
+
+function randFrom(list){
+  return list[randN(list.length)];
+}
+
+function cardSrc(type, value){
+	return "cartes/" + type + "_" + value + ".GIF";
+}
+
+function cardColor(type){
+	if (type === "carreau" ||
+		type === "coeur"){
+		return "rouge";
+	}
+	return "noir";
+}
+
+function addRandCard(){
+  var type = randFrom(types);
+  var value = randFrom(values);
+  var color = cardColor(type);
+
+  var img = newEl("img");
+  img.src = cardSrc(type, value);
+  img.id = type + "_" + value;
+  img.cardColor = color;
+
+  cartes.appendChild(img)
+  return img;
+}
+
+
+
+var cartes = byId("cartes");
+
+
+var n = 10;
+
+forLoop(n, function (i){
+  var img = addRandCard();
+  var prev = img.previousSibling;
+
+  // if the previous card exists:
+  if (prev !== null){
+
+  	// if this and the previous cards
+  	// have the same color (red or black)
+  	// then, delete the previous one
+    if (img.cardColor == prev.cardColor) {
+      cartes.removeChild(prev);
+    }
+  }
+});
+
+</script>
+</body>
+</html>
