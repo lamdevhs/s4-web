@@ -3,8 +3,7 @@ function log(v) {
 }
 
 function map_(f, list) {
-  n = list.length;
-  for (var i = 0; i < n; i = i+1) {
+  for (var i = 0; i < list.length; i = i+1) {
     f(list[i]);
   }
 }

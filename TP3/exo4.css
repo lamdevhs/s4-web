@@ -1,0 +1,7 @@
+	body { background: #eeeeee; } 
+	h1 { text-align:center;}	
+	
+	article.partie2 p {background: #555555; border-radius: 4px;  width: 80px; height:80px;
+	display:inline-block;  margin:5px 5px 5px 5px;}
+	
+	article.partie2 p a  { color : #555555; }  
