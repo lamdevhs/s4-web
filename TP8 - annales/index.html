@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Ma Boutique</title>
+<style>
+	body{
+		width:600px;
+		margin:auto;
+		box-shadow:0 0 4px #eee;
+		border-radius:15px;
+		font-size:15px;
+		color:#333;
+		text-align:center;
+		padding:20px;
+		line-height:22px;
+	}
+	h1,h2{
+		color:#777;
+		text-align:center;
+	}
+	article{    
+		display: inline-block;
+		padding: 8px;
+		margin: 8px;
+		border: 1px solid #eee;
+	}
+	ul#panier li{
+		list-style-type:none;
+		background-color:#e1e1e1;
+		margin:5px 0;
+	}
+	.prix{
+		font-size:20px;
+		font-weight:bold;
+	}
+	
+</style>
+</head>
+<body>
+	<h1>Ma boutique</h1>
+	<h2>Tout pour le bureau</h2>
+	<main>
+		<section id="catalogue">
+			<h3>Catalogue</h3>
+		</section>
+		<section>
+			<h3>Mon panier </h3>
+			<ul id="panier">
+			</ul>
+			<p class="prix ">Montant Total TTC : <span id="prixTTC"></span> €</p>
+		</section>
+	</main>
+
+	<script>	
+		window.addEventListener('load', function(){	
+			const MAX=100;
+			const MIN=30;
+			
+			var tabDescriptions=['chaise bois rouge','lampe design','chaise metal','sous-main en cuir', 'stylo chic','bureau','ventilateur', 'tapis de souris'];
+			var monCatalogue = new Array();	
+			var monPanier =new Array();
+			
+			initialiseProduits(monCatalogue);
+			afficheProduits(monCatalogue)
+			
+			////////////////// exo 1 : initialisation du catalogue //////////////////////////////////
+			function initialiseProduits(tabCatalogue){
+				for(var i=0;i< /* nombre max de description */;i++){
+					var produit = { 
+						description : /* à récupérer dans le tableau tabDescriptions*/,
+						prix : /*nombre akéatoire compris entre les constantes MIN et MAX, ()sans le signe €) */
+					};
+					/* ajouter produit dans le tableau tabCatalogue */					
+				}
+
+			}
+			
+			//////////////////// exo 2 : affichage du catalogue dans la section catalogue de l'HTML /////////////////
+			function afficheProduits(tabCatalogue){
+				for(var i=0;i< /* nombre produits dans le catalogue */;i++){
+				
+					/* insérer les produits dans l'HTML, au niveau de la section d'id catalogue */
+				}	
+			}
+			
+			
+		}		
+	
+	</script> 
+</body>
+</html>

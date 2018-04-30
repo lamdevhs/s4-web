@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>Ma Boutique</title>
+<style>
+	body{
+		width:600px;
+		margin:auto;
+		box-shadow:0 0 4px #eee;
+		border-radius:15px;
+		font-size:15px;
+		color:#333;
+		text-align:center;
+		padding:20px;
+		line-height:22px;
+	}
+	h1,h2{
+		color:#777;
+		text-align:center;
+	}
+	article{    
+		display: inline-block;
+		padding: 8px;
+		margin: 8px;
+		border: 1px solid #eee;
+	}
+	ul#panier li{
+		list-style-type:none;
+		background-color:#e1e1e1;
+		margin:5px 0;
+	}
+	.prix{
+		font-size:20px;
+		font-weight:bold;
+	}
+	
+</style>
+</head>
+<body>
+	<h1>Ma boutique</h1>
+	<h2>Tout pour le bureau</h2>
+	<main>
+		<section id="catalogue">
+			<h3> Catalogue</h3>
+		<article><h4>chaise bois rouge</h4><p class="prix">49€</p><button id="article-0">Ajouter l'article</button></article><article><h4>lampe design</h4><p class="prix">86€</p><button id="article-1">Ajouter l'article</button></article><article><h4>chaise metal</h4><p class="prix">35€</p><button id="article-2">Ajouter l'article</button></article><article><h4>sous-main en cuir</h4><p class="prix">56€</p><button id="article-3">Ajouter l'article</button></article><article><h4>stylo chic</h4><p class="prix">46€</p><button id="article-4">Ajouter l'article</button></article><article><h4>bureau</h4><p class="prix">85€</p><button id="article-5">Ajouter l'article</button></article><article><h4>ventilateur</h4><p class="prix">71€</p><button id="article-6">Ajouter l'article</button></article><article><h4>tapis de souris</h4><p class="prix">45€</p><button id="article-7">Ajouter l'article</button></article></section>
+		<section>
+			<h3> Mon panier </h3>
+			<ul id="panier">
+			</ul>
+			<p class="prix">Montant Total TTC : <span id="prixTTC"></span> €</p>
+		</section>
+	</main>
+
+	<script>	
+		window.addEventListener('load', function(){	
+			const MAX=100;
+			const MIN=30;
+			
+			var tabProduits=['chaise bois rouge','lampe design','chaise metal','sous-main en cuir', 'stylo chic','bureau','ventilateur', 'tapis de souris'];
+			var tabCatalogue = new Array();	
+			var tabPanier =new Array();
+			
+			listeProduits(tabCatalogue);
+			recupereStorage()
+			
+			afficheProduits(tabCatalogue);
+			boutonAjout(tabCatalogue);
+			
+			/////////////////////////////////////////////////
+			
+			function listeProduits(produitsT){   // produitsT : tableau passé par référence : paramètre d'entrée/sortie
+
+			/*	if (sessionStorage.getItem("produits")) {
+					produitsT= JSON.parse(sessionStorage.getItem("produits"));
+				}
+				else{*/
+				
+					initialiseProduits(produitsT);
+			//	}
+			}
+
+			///////////////////////////////////////////////////////////
+			function initialiseProduits(produitsT){
+				for(var i=0;i<tabProduits.length;i++){
+					var produit = { 
+						description : tabProduits[i],
+						prix : MIN+Math.round(Math.random()*(MAX-MIN))
+					};
+					produitsT[i] = produit;
+				}
+				sessionStorage.setItem("produits",JSON.stringify(produitsT));
+			}
+			
+			///////////////////////////////////////////////////////
+			
+			function afficheProduits(produitsA){
+				for(var i=0;i<produitsA.length;i++){
+					document.getElementById('catalogue').innerHTML+="<article><h4>"+produitsA[i].description+"</h4><p class='prix'>"+produitsA[i].prix+"€</p><button id='article-"+i+"'>Ajouter l'article</button></article>";
+				}
+			}
+			
+			///////////////////////////////////////////////////////////
+			function boutonAjout(){
+				var boutons=document.querySelectorAll("button");
+				for(var i=0;i<6;i++){
+					boutons[i].addEventListener('click', ajoutPanier);	
+				}
+			}
+			
+			function ajoutPanier(event){
+				var id=event.target.id.split("-");
+				var produitPanier = { 
+						description : tabCatalogue[id[1]].description,
+						prix : tabCatalogue[id[1]].prix
+					};
+
+				document.getElementById('panier').innerHTML+="<li>"+produitPanier.description+" "+produitPanier.prix+"€</li>";
+				
+				var nouveauPrix= Number(document.getElementById('prixTTC').innerHTML)+Number(produitPanier.prix);
+				document.getElementById('prixTTC').innerHTML=nouveauPrix;
+				
+				sessionStorage.setItem("prix",nouveauPrix);
+				
+				tabPanier.push(produitPanier);	
+				sessionStorage.setItem("panier",JSON.stringify(tabPanier));				
+			}
+			
+			function recupereStorage(){
+				if (prix = sessionStorage.getItem("prix")) {
+						document.getElementById("prixTTC").innerHTML=prix;
+				};
+				
+				if (sessionStorage.getItem("panier")) {
+					tabPanier = JSON.parse(sessionStorage.getItem("panier"));
+					// affichage du panier sauvegardé
+					for (var i=0; i < tabPanier.length; i++) {
+						var nomProduit=tabPanier[i].description;
+						var prix=tabPanier[i].prix;
+						document.getElementById('panier').innerHTML+="<li>"+nomProduit+"-"+prix+"€</li>";
+					}
+				}
+			}
+
+			
+			
+			////////////////////////////////////////////////////////////
+			
+			
+
+			});			
+	
+	</script> 
+
+</body></html>
