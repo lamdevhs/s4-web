@@ -1,0 +1,201 @@
+<!-- BAYARD Nathanael - 2018 - L2 Informatique -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Annuaire Festivals</title>
+<style>
+	body{
+		width:500px;
+		margin:auto;
+		box-shadow:0 0 4px #ddd;
+		border-radius:15px;
+		font-size:15px;
+		line-height:22px;
+		color:#333;
+		padding:20px;
+	}
+	h1,h2{
+		color:#666;
+	}
+	article{    
+		margin: 10px;
+		border: 1px solid #eee;
+		padding-left:15px;
+	}
+	article span{margin : 10px;}
+	article span.star, article span.map{width:20px;height:16px;display:inline-block;}
+	article span.star.off {background : url('star-off.png') no-repeat;background-size:contain;}
+	article span.map.off {background : url('map-off.png') no-repeat;background-size:contain;}
+	article span.star.on {background : url('star-on.png') no-repeat;background-size:contain;}
+	article span.map.on {background : url('map-on.png') no-repeat;background-size:contain;}
+	.nom{
+		font-size:1.2em;
+		font-weight:bold;
+	}
+	
+	ul#annuaire li{
+		list-style-type:none;
+		background-color:#eee;
+		margin:5px 0;
+	}
+	.favoris{
+		font-weight:bold;
+		font-size:20px;
+	}
+	
+</style>
+</head>
+<body>
+	<h1>Festivals</h1>
+	<main>
+		<section id="catalogue">
+			<h2>Listing 2018</h2>
+		</section>
+		<section>
+			<h3>Mes favoris </h3>
+			<ul id="favoris">
+			</ul>
+		</section>
+	</main>
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
+	</script>
+	<script>
+$().ready(function(){
+	var tabNomFestivals=['Jazzebre','Toucouleurs','Le Sirk','Good Rockin Tonight', 'Les électropricales', 'En Grangeons la musique'];
+	
+	var tabFavoris = [];
+	
+	const MIN=40;
+	const MAX=100;
+	
+
+	var festivals = initialiseFestivals();
+	afficheFestivals();
+	boutonEvent();
+	recupereStorage(); // doit être lancé en dernier
+	//recupereStorage_version_alternative(); // <-- cf commentaire plus bas
+
+	///exercice 1////////////////////////////////////////////////////////
+	function initialiseFestivals(){
+		var festivals = new Array();
+		map_(tabNomFestivals, function (nomFestival, i){
+			var festival = {
+				nom: nomFestival,
+				prix: randN(MIN, MAX + 1)
+			};
+			festivals.push(festival);
+		});
+		return festivals;
+	}
+
+	function afficheFestivals(){
+		var catalogue = $("#catalogue");
+		map_(festivals, function (festival, i){
+			catalogue.append(
+				$("<article>").attr("id", i)
+					.append(
+						$("<span>").attr("class", "nom")
+							.text(festival.nom)
+					).append(
+						$("<span>").attr("class", "prix")
+								.text(festival.prix + "€")
+					).append(
+						$("<span>")
+							.attr("class", "star off")
+							.attr("id", "star-" + i)
+					)
+			);
+		});
+	}
+
+	function boutonEvent() {
+		$("span").each(function () {
+			var span = $(this);
+			var classes = span.attr("class").split(" ");
+			if (classes.indexOf('star') !== -1) {
+				span.click(gestionFavoris);
+			}
+		});
+	}
+
+	function gestionFavoris(ev) {
+		var star = $(this);
+		var index = star.attr("id").split("-")[1];
+		var favoris = $("#favoris");
+		if (star.attr("class") === "star off") {
+			// we add it
+			star.attr("class", "star on");
+			favoris.append(
+				$("<li>")
+					.attr("id", "fav-" + index)
+					.text(festivals[index].nom)
+			);
+			tabFavoris.push(index);
+		}
+		else {
+			star.attr("class", "star off");
+			$("#fav-" + index).remove();
+			tabFavoris.splice(tabFavoris.indexOf(index),1);
+		}
+		localStorage.setItem("tabFavoris", JSON.stringify(tabFavoris));
+	}
+
+	function recupereStorage() {
+		var tab = JSON.parse(localStorage.getItem("tabFavoris") || '[]');
+		map_(tab, function (favIndex, i){
+			document.getElementById("star-" + favIndex).click();
+		});
+		// en déclenchant manuellement l'évènement de .click() sur
+		// chaque étoile pour les favoris sauvegardés dans le localStorage,
+		// on s'assure de remplir tabFavoris et de créer la liste
+		// des favoris correspondante, du fait que gestionFavoris() se
+		// fait par là même appeler et effectue le travail désiré.
+		//
+		// bien sûr, recupereStorage() doit être appelée en dernier,
+		// pour que les étoiles existent et qu'elles aient bien
+		// le bon eventListener attribué par l'appel à boutonEvent().
+	}
+
+	function recupereStorage_version_alternative() {
+		// je n'étais pas sûr que la version précédente de cet exercice
+		// serait acceptée comme valide par rapport aux instructions,
+		// donc voici une version qui fait tout le travail manuellement.
+		//
+		var tab = JSON.parse(localStorage.getItem("tabFavoris") || '[]');
+		var favoris = $("#favoris");
+		map_(tab, function (favIndex, i){
+			var star = $("#star-" + favIndex);
+			star.attr("class", "star on");
+			favoris.append(
+				$("<li>")
+					.attr("id", "fav-" + favIndex)
+					.text(festivals[favIndex].nom)
+			);
+			tabFavoris.push(favIndex);
+		});
+	}
+
+	// ----------- outils diverses
+	function log(x){
+		return console.log(x);
+	}
+	
+
+	function map_(t, f){
+		for (var i = 0; i < t.length; i++){
+			f(t[i], i)
+		}
+	}
+
+	function randN(min, max){ // [min, max[
+		var diff = max - min;
+		return Math.floor(Math.random()*diff) + min;
+	}
+});	
+	
+	</script> 
+</body>
+</html>
