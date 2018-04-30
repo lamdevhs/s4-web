@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Ma Boutique</title>
+
 <style>
 	body{
 		width:600px;
@@ -48,44 +49,116 @@
 			<h3>Mon panier </h3>
 			<ul id="panier">
 			</ul>
-			<p class="prix ">Montant Total TTC : <span id="prixTTC"></span> €</p>
+			<p class="prix">Montant Total TTC : <span id="prixTTC">0</span>€</p>
 		</section>
 	</main>
-
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
+</script>
 	<script>	
-		window.addEventListener('load', function(){	
-			const MAX=100;
-			const MIN=30;
-			
-			var tabDescriptions=['chaise bois rouge','lampe design','chaise metal','sous-main en cuir', 'stylo chic','bureau','ventilateur', 'tapis de souris'];
-			var monCatalogue = new Array();	
-			var monPanier =new Array();
-			
-			initialiseProduits(monCatalogue);
-			afficheProduits(monCatalogue)
-			
-			////////////////// exo 1 : initialisation du catalogue //////////////////////////////////
-			function initialiseProduits(tabCatalogue){
-				for(var i=0;i< /* nombre max de description */;i++){
-					var produit = { 
-						description : /* à récupérer dans le tableau tabDescriptions*/,
-						prix : /*nombre akéatoire compris entre les constantes MIN et MAX, ()sans le signe €) */
-					};
-					/* ajouter produit dans le tableau tabCatalogue */					
-				}
+$().ready(function(){
+	const MAX=100;
+	const MIN=30;
+	
+	var tabDescriptions=['chaise bois rouge','lampe design','chaise metal','sous-main en cuir', 'stylo chic','bureau','ventilateur', 'tapis de souris'];
+	//var monCatalogue = new Array();	
+	//var monPanier =new Array();
+	
+	// session storage
+	var TTC = sessionStorage.getItem("TTC") || 0;
+	$("#prixTTC").text(TTC);
+	var monPanier = JSON.parse(sessionStorage.getItem("panier") || "[]");
+	var monCatalogue = JSON.parse(
+		sessionStorage.getItem("catalogue") || "[]"
+	);
+	loadCart(monPanier);
 
-			}
-			
-			//////////////////// exo 2 : affichage du catalogue dans la section catalogue de l'HTML /////////////////
-			function afficheProduits(tabCatalogue){
-				for(var i=0;i< /* nombre produits dans le catalogue */;i++){
-				
-					/* insérer les produits dans l'HTML, au niveau de la section d'id catalogue */
-				}	
-			}
-			
-			
-		}		
+	log ([TTC, monPanier, monCatalogue]);
+
+	if (monCatalogue.length == 0)
+		initialiseProduits(monCatalogue);
+	afficheProduits(monCatalogue);
+	boutonAjout(monCatalogue);
+	
+	////////////////// exo 1 : initialisation du catalogue //////////////////////////////////
+	function initialiseProduits(tabCatalogue){
+		var ndesc = tabDescriptions.length;
+		for(var i = 0; i < ndesc; i++){
+			var produit = { 
+				description : tabDescriptions[i],
+				prix : randN(MIN, MAX + 1)
+			};
+			tabCatalogue.push(produit);
+		}
+		sessionStorage.setItem("catalogue", JSON.stringify(monCatalogue));
+	}
+	
+	//////////////////// exo 2 : affichage du catalogue dans la section catalogue de l'HTML /////////////////
+	function afficheProduits(tabCatalogue){
+		map_(tabCatalogue, function (el, i){
+			$("#catalogue").append(
+				$("<article>").append(
+					$("<h4>").text(el.description)
+				).append(
+					$("<p>").text(el.prix + "€").attr("class", "montant")
+				).append(
+					$("<button>").attr("id", "article-" + i)
+					.text("Ajouter l'article")
+				)
+			);
+		});
+	}
+
+	function boutonAjout(monCatalogue){
+		$("button").each(function (){
+			var btn = $(this);
+			var id = btn.attr("id").split("-")[1];
+			var produit = monCatalogue[id];
+			var montantTTC = $("#prixTTC");
+			btn.click(function (ev){
+				$("#panier").append(
+					$("<li>").text(produit.description + " "
+						+ produit.prix + "€"
+					)
+				);
+				var newTTC = Number(montantTTC.text()) + produit.prix;
+				montantTTC.text(newTTC);
+				sessionStorage.setItem("TTC", newTTC);
+
+				monPanier.push(produit);
+				sessionStorage.setItem("panier", JSON.stringify(monPanier));
+			});
+		});
+	}
+
+	function loadCart(panier){
+		map_(panier, function (produit, i) {
+			$("#panier").append(
+					$("<li>").text(produit.description + " "
+						+ produit.prix + "€"
+					)
+				);
+		});
+	}
+
+
+	// --------- TOOLS:
+	function randN(min, max) { // rand integer in [min,max[
+		var diff = max - min
+	  return Math.floor(Math.random()*diff) + min;
+	}
+
+	function map_(list, f) {
+	  for (var i = 0; i < list.length; i++) {
+	    f(list[i], i);
+	  }
+	}
+
+
+	function log(v) {
+	  console.log(v);
+	}
+});
 	
 	</script> 
 </body>
